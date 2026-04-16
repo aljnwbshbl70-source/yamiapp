@@ -43,8 +43,9 @@
                 </div>
 
                 <div class="bg-white/5 p-6 rounded-[30px] border border-white/5">
-                    <input type="text" id="adminSearch" oninput="filterAdminItems()" placeholder="ابحث للحذف..." class="search-box mb-4">
-                    <div id="admin-items-list" class="space-y-2 max-h-[300px] overflow-y-auto"></div>
+                    <p class="text-[10px] text-purple-400 mb-2 font-bold uppercase">إدارة الحذف</p>
+                    <input type="text" id="adminSearch" oninput="filterAdminItems()" placeholder="ابحث للحذف..." class="search-box mb-4 text-center">
+                    <div id="admin-items-list" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
                 </div>
             </div>
         </div>
@@ -96,7 +97,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, deleteDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD9wIxA2gNyKDdht53W2D4EHEY-e9Fh3j8",
@@ -117,6 +118,7 @@
             r.onload = () => res(r.result);
         });
 
+        // النشر
         document.getElementById('saveBtn').onclick = async () => {
             const n = document.getElementById('itemName').value;
             const d = document.getElementById('itemDesc').value;
@@ -130,9 +132,11 @@
 
             await addDoc(collection(db, t), { name: n, desc: d, link: l, img: img, createdAt: ts });
             await addDoc(collection(db, "trending"), { name: n, desc: d, link: l, img: img, createdAt: ts, isAuto: true });
-            alert("تم النشر!");
+            alert("تم النشر بنجاح!");
+            location.reload(); // تحديث لضمان ظهور البيانات
         };
 
+        // عرض العناصر
         window.changeTab = (type) => {
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active', 'text-white'));
             document.getElementById('t-' + type).classList.add('tab-active', 'text-white');
@@ -175,29 +179,66 @@
             displayItems(currentItems.filter(i => i.name.toLowerCase().includes(term)));
         };
 
+        // الإدارة والحذف (تم الإصلاح ✅)
         window.toggleAdmin = () => {
-            document.getElementById('adminSidebar').classList.toggle('open');
+            const sidebar = document.getElementById('adminSidebar');
+            sidebar.classList.toggle('open');
+            if(sidebar.classList.contains('open')) {
+                loadAdminData();
+            }
+        };
+
+        function loadAdminData() {
             const types = ['trending', 'games', 'apps', 'tools'];
             allAdminItems = [];
+            let loadedCount = 0;
+            
             types.forEach(t => {
                 onSnapshot(collection(db, t), snap => {
-                    snap.forEach(d => allAdminItems.push({ id: d.id, type: t, ...d.data() }));
+                    snap.forEach(d => {
+                        // تجنب التكرار بناءً على ID
+                        if(!allAdminItems.find(x => x.id === d.id)) {
+                            allAdminItems.push({ id: d.id, type: t, ...d.data() });
+                        }
+                    });
                     filterAdminItems();
                 });
             });
-        };
+        }
 
         window.filterAdminItems = () => {
             const term = document.getElementById('adminSearch').value.toLowerCase();
             const list = document.getElementById('admin-items-list');
             list.innerHTML = "";
-            allAdminItems.filter((v,i,a)=>a.findIndex(t=>(t.id===v.id))===i) // إزالة التكرار
-            .filter(i => i.name.toLowerCase().includes(term)).forEach(item => {
-                list.innerHTML += `<div class="flex items-center justify-between bg-white/5 p-3 rounded-xl mb-2"><span class="text-[10px]">${item.name}</span><button onclick="deleteItem('${item.type}', '${item.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>`;
+            
+            // فلترة وعرض
+            allAdminItems.filter(i => i.name.toLowerCase().includes(term)).forEach(item => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between bg-white/5 p-3 rounded-xl mb-2 border border-white/5";
+                div.innerHTML = `
+                    <span class="text-[10px] font-bold truncate w-32 text-right">${item.name}</span>
+                    <button onclick="window.deleteItem('${item.type}', '${item.id}')" class="text-red-500 hover:scale-110 transition">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+                list.appendChild(div);
             });
         };
 
-        window.deleteItem = async (t, id) => { if(confirm("حذف؟")) await deleteDoc(doc(db, t, id)); };
+        window.deleteItem = async (t, id) => {
+            if(confirm("هل تريد حذف هذا العنصر نهائياً؟")) {
+                try {
+                    await deleteDoc(doc(db, t, id));
+                    alert("تم الحذف بنجاح!");
+                    // تحديث القائمة محلياً فوراً
+                    allAdminItems = allAdminItems.filter(i => i.id !== id);
+                    filterAdminItems();
+                } catch (e) {
+                    alert("خطأ في الحذف!");
+                }
+            }
+        };
+
         window.forceFollow = () => {
             window.open('https://www.instagram.com/d_a_r_k_j7', '_blank');
             setTimeout(() => {
@@ -205,6 +246,7 @@
                 document.getElementById('downloadBtn').classList.remove('hidden');
             }, 2500);
         };
+        
         window.closeDesc = () => document.getElementById('descModal').classList.remove('active');
         window.adminLogin = () => { if(prompt("Pass:") === "🇾🇪*야미, 네 삼촌|  |يامي عمكم*") toggleAdmin(); };
 
