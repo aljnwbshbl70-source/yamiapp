@@ -3,188 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇾🇪 يامي | YAMI HUB</title>
+    <title>يامي | YAMI HUB PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --main-purple: #a855f7; --bg-dark: #050505; }
-        body { background-color: var(--bg-dark); color: white; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; }
-        .tab-btn.active { background: linear-gradient(135deg, #a855f7, #3b82f6); border: none; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
-        #adminSidebar { position: fixed; top: 0; left: -100%; width: 320px; height: 100vh; background: #0a0a0f; border-right: 1px solid var(--main-purple); z-index: 1000; transition: 0.5s cubic-bezier(0.85, 0, 0.15, 1); padding: 30px; }
+        body { background: #050505; color: white; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; }
+        #adminSidebar { position: fixed; top: 0; left: -100%; width: 320px; height: 100vh; background: #0a0a0f; border-right: 1px solid #a855f7; z-index: 1000; transition: 0.5s; padding: 25px; overflow-y: auto; }
         #adminSidebar.open { left: 0; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal.active { display: flex; }
+        .item-card { width: 100%; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; transition: 0.3s; margin-bottom: 12px; }
+        .item-card:hover { border-color: #a855f7; background: rgba(168, 85, 247, 0.05); transform: scale(1.02); }
     </style>
 </head>
 <body>
 
     <aside id="adminSidebar">
-        <h2 class="text-xl font-black mb-8 text-purple-500">إدارة يامي ⚡</h2>
-        <div class="space-y-4">
-            <input type="text" id="itemName" placeholder="اسم العنصر" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
-            <input type="text" id="itemImg" placeholder="رابط الصورة (Direct Link)" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
-            <input type="text" id="itemDesc" placeholder="وصف العنصر" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
-            <input type="text" id="itemLink" placeholder="رابط التحميل" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
-            <select id="itemType" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
-                <option value="games">ألعاب 🎮</option>
-                <option value="apps">تطبيقات 📱</option>
-                <option value="tools">أدوات 🛠️</option>
-            </select>
-            <button id="saveBtn" class="w-full py-4 bg-purple-600 rounded-2xl font-black">حفظ ونشر 🚀</button>
+        <h2 class="text-xl font-black mb-6 text-purple-500">إدارة يامي ⚡</h2>
+        
+        <div class="mb-6 p-4 bg-white/5 rounded-2xl text-center">
+            <p class="text-[10px] text-gray-400 mb-2">تغيير الأفتار الشخصي</p>
+            <input type="file" id="avatarFile" accept="image/*" class="hidden">
+            <button onclick="document.getElementById('avatarFile').click()" class="text-xs bg-blue-600 px-4 py-2 rounded-lg font-bold">اختيار صورة 👤</button>
         </div>
-        <button onclick="toggleAdmin()" class="mt-10 text-gray-500 text-[10px] uppercase">إغلاق</button>
+
+        <hr class="border-white/5 mb-6">
+
+        <div class="space-y-4">
+            <input type="text" id="itemName" placeholder="اسم (لعبة/تطبيق/أداة)" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none text-sm">
+            
+            <div class="border-2 border-dashed border-white/10 p-4 text-center rounded-xl">
+                <p class="text-[10px] mb-2 text-gray-400">صورة العنصر (رفع مباشر)</p>
+                <input type="file" id="itemFile" accept="image/*" class="text-[10px]">
+            </div>
+
+            <input type="text" id="itemLink" placeholder="رابط التحميل المباشر" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none text-sm">
+            
+            <select id="itemType" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none text-sm">
+                <option value="games">قسم الألعاب 🎮</option>
+                <option value="apps">قسم التطبيقات 📱</option>
+                <option value="tools">قسم الأدوات 🛠️</option>
+            </select>
+            
+            <button id="saveBtn" class="w-full py-4 bg-purple-600 rounded-2xl font-black shadow-lg">نشر الآن (مجاني) 🚀</button>
+        </div>
+        <button onclick="toggleAdmin()" class="mt-10 text-gray-600 text-[10px] w-full text-center uppercase tracking-widest">إغلاق اللوحة</button>
     </aside>
 
     <header class="pt-16 pb-10 text-center px-6">
         <div class="relative inline-block mb-6">
             <div class="absolute inset-0 bg-purple-600 blur-3xl opacity-30"></div>
-            <img src="https://i.ibb.co/L9Y0YpL/232724.png" 
-                 onerror="this.src='https://via.placeholder.com/150'"
-                 class="relative w-32 h-32 rounded-full border-4 border-purple-500/30 p-1 object-cover">
+            <img id="displayAvatar" src="https://i.ibb.co/hFBnP5S/image.png" class="relative w-32 h-32 rounded-full border-4 border-purple-500/30 p-1 object-cover">
         </div>
-        <h1 class="text-3xl font-black mb-2 tracking-tighter">🇾🇪 يامي | <span class="text-purple-500">YAMI</span></h1>
-        <p class="text-gray-500 text-[10px] uppercase tracking-widest">Gamer | Tech Enthusiast | Content Creator</p>
+        <h1 class="text-3xl font-black mb-1 tracking-tighter italic">🇾🇪 يامي | YAMI</h1>
+        <p class="text-[10px] text-gray-500 uppercase tracking-[0.2em]">The Small Developer</p>
 
-        <nav class="mt-10 flex flex-wrap justify-center gap-2">
-            <button onclick="showTab('games')" class="tab-btn active glass px-6 py-3 text-xs font-bold" id="btn-games">الألعاب</button>
-            <button onclick="showTab('apps')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-apps">التطبيقات</button>
-            <button onclick="showTab('tools')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-tools">الأدوات</button>
-            <button onclick="showTab('social')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-social">تواصل</button>
+        <nav class="mt-10 flex justify-center gap-2 overflow-x-auto pb-4 px-4">
+            <button onclick="switchTab('games')" class="glass px-6 py-3 text-xs font-bold whitespace-nowrap active" id="btn-games">الألعاب</button>
+            <button onclick="switchTab('apps')" class="glass px-6 py-3 text-xs font-bold whitespace-nowrap" id="btn-apps">التطبيقات</button>
+            <button onclick="switchTab('tools')" class="glass px-6 py-3 text-xs font-bold whitespace-nowrap" id="btn-tools">الأدوات</button>
         </nav>
     </header>
 
-    <main class="max-w-4xl mx-auto px-6 pb-40">
-        <div id="grid-content" class="grid grid-cols-1 gap-3">
+    <main class="max-w-xl mx-auto px-6 pb-20">
+        <div id="main-list" class="space-y-1">
             </div>
-
-        <div id="social-content" class="hidden space-y-3 max-w-sm mx-auto">
-            <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="glass p-5 flex items-center justify-between group">
-                <div class="flex items-center gap-4"><i class="fab fa-instagram text-pink-500 text-xl"></i> إنستقرام يامي</div>
-                <i class="fas fa-external-link-alt text-[10px] opacity-20"></i>
-            </a>
-            <a href="https://wa.me/966574360046" target="_blank" class="glass p-5 flex items-center justify-between group">
-                <div class="flex items-center gap-4"><i class="fab fa-whatsapp text-green-500 text-xl"></i> واتساب يامي</div>
-                <i class="fas fa-external-link-alt text-[10px] opacity-20"></i>
-            </a>
-        </div>
     </main>
 
-    <div id="itemModal" class="modal">
-        <div class="glass max-w-sm w-full p-8 text-center relative border-purple-500/30">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 text-xl">✕</button>
-            <img id="modalImg" src="" class="w-32 h-32 mx-auto rounded-3xl mb-6 object-cover shadow-2xl">
-            <h2 id="modalTitle" class="text-2xl font-black mb-2"></h2>
-            <p id="modalDesc" class="text-gray-400 text-xs mb-8"></p>
-            
-            <div id="lockBtn">
-                <button onclick="unlockLink()" class="w-full py-4 bg-white text-black rounded-2xl font-black text-sm">تابعني لفتح التحميل 🔒</button>
-            </div>
-            <a id="downloadLink" href="#" target="_blank" class="hidden w-full py-4 bg-purple-600 rounded-2xl font-black text-sm animate-pulse">تحميل الآن جاهز ✅</a>
-        </div>
-    </div>
-
-    <button onclick="openAdmin()" class="fixed bottom-6 left-6 text-[8px] text-white/10 hover:text-white transition tracking-widest">ADMIN PANEL</button>
+    <button onclick="adminCheck()" class="fixed bottom-6 left-6 opacity-5 text-[8px] hover:opacity-100 transition">ADMIN</button>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
-        // تم فحص إعداداتك وهي صحيحة 100%
+        // استخدام القاعدة الجديدة الخاصة بك
         const firebaseConfig = {
-            apiKey: "AIzaSyC6XA3vWHFskKV_6v5Xj7TTBO8W0bvhQ2E",
-            authDomain: "yamiapp-e7765.firebaseapp.com",
-            projectId: "yamiapp-e7765",
-            storageBucket: "yamiapp-e7765.firebasestorage.app",
-            messagingSenderId: "546559285368",
-            appId: "1:546559285368:web:8a2313d35126a93cb8758d"
+            apiKey: "AIzaSyD9wIxA2gNyKDdht53W2D4EHEY-e9Fh3j8",
+            authDomain: "yamiaapp.firebaseapp.com",
+            projectId: "yamiaapp",
+            storageBucket: "yamiaapp.firebasestorage.app",
+            messagingSenderId: "688692284593",
+            appId: "1:688692284593:web:0f83b5d5105325b044e690",
+            measurementId: "G-RJEFYNX7JZ"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const adminKey = "🇾🇪*야미, 네 삼촌|  |يامي عمكم*";
+        // وظيفة تحويل الصورة لنص (Base64) للتوفير
+        const fileToText = file => new Promise((res, rej) => {
+            const r = new FileReader();
+            r.readAsDataURL(file);
+            r.onload = () => res(r.result);
+            r.onerror = e => rej(e);
+        });
 
-        // تبديل الأقسام
-        window.showTab = (tab) => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + tab).classList.add('active');
-            
-            if(tab === 'social') {
-                document.getElementById('grid-content').classList.add('hidden');
-                document.getElementById('social-content').classList.remove('hidden');
-            } else {
-                document.getElementById('grid-content').classList.remove('hidden');
-                document.getElementById('social-content').classList.add('hidden');
-                fetchData(tab);
+        // رفع الأفتار الشخصي
+        document.getElementById('avatarFile').onchange = async (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const text = await fileToText(file);
+                await setDoc(doc(db, "settings", "profile"), { avatar: text });
+                alert("تم تحديث الأفتار! 👤");
             }
         };
 
-        // جلب البيانات (مع تصحيح مشكلة التخزين)
-        function fetchData(type) {
-            const q = query(collection(db, type), orderBy("createdAt", "desc"));
-            onSnapshot(q, (snap) => {
-                const grid = document.getElementById('grid-content');
-                grid.innerHTML = "";
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    grid.innerHTML += `
-                        <button onclick="showDetails('${d.name}', '${d.img}', '${d.desc}', '${d.link}')" 
-                                class="glass p-5 flex justify-between items-center group hover:bg-white/5">
-                            <span class="font-bold text-sm">${d.name}</span>
-                            <i class="fas fa-arrow-left text-[10px] opacity-20 group-hover:opacity-100 transition"></i>
-                        </button>
-                    `;
-                });
-            });
-        }
+        // عرض الأفتار المحفوظ
+        onSnapshot(doc(db, "settings", "profile"), d => {
+            if(d.exists()) document.getElementById('displayAvatar').src = d.data().avatar;
+        });
 
-        window.showDetails = (t, i, d, l) => {
-            document.getElementById('modalTitle').innerText = t;
-            document.getElementById('modalImg').src = i;
-            document.getElementById('modalDesc').innerText = d || "لا يوجد وصف";
-            document.getElementById('downloadLink').href = l;
-            document.getElementById('lockBtn').classList.remove('hidden');
-            document.getElementById('downloadLink').classList.add('hidden');
-            document.getElementById('itemModal').classList.add('active');
-        };
-
-        window.unlockLink = () => {
-            window.open('https://www.instagram.com/d_a_r_k_j7', '_blank');
-            setTimeout(() => {
-                document.getElementById('lockBtn').classList.add('hidden');
-                document.getElementById('downloadLink').classList.remove('hidden');
-            }, 2500);
-        };
-
-        window.closeModal = () => document.getElementById('itemModal').classList.remove('active');
-
-        // الحفظ (حل مشكلة عدم التخزين)
+        // نشر عنصر جديد
         document.getElementById('saveBtn').onclick = async () => {
             const name = document.getElementById('itemName').value;
-            const img = document.getElementById('itemImg').value;
-            const desc = document.getElementById('itemDesc').value;
             const link = document.getElementById('itemLink').value;
             const type = document.getElementById('itemType').value;
+            const file = document.getElementById('itemFile').files[0];
 
-            if(name && img && link) {
-                try {
-                    await addDoc(collection(db, type), {
-                        name, img, desc, link, createdAt: serverTimestamp()
-                    });
-                    alert("تم الحفظ بنجاح! 🎉");
-                    toggleAdmin();
-                } catch(e) {
-                    alert("مشكلة في التخزين! تأكد من إعدادات Rules في Firebase Console.");
-                }
-            }
+            if(!name || !file || !link) return alert("عبئ الخانات وارفع الصورة!");
+
+            document.getElementById('saveBtn').innerText = "جاري النشر...";
+            const imgText = await fileToText(file);
+
+            await addDoc(collection(db, type), {
+                name, link, img: imgText, createdAt: serverTimestamp()
+            });
+
+            alert("تم النشر بنجاح مجاناً! ✅");
+            toggleAdmin();
+            document.getElementById('saveBtn').innerText = "نشر الآن (مجاني) 🚀";
         };
 
-        window.openAdmin = () => { if(prompt("كلمة المرور:") === adminKey) toggleAdmin(); };
-        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.toggle('open');
+        // تبديل الأقسام وعرض البيانات
+        window.switchTab = (type) => {
+            onSnapshot(query(collection(db, type), orderBy("createdAt", "desc")), (snap) => {
+                const list = document.getElementById('main-list');
+                list.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    list.innerHTML += `
+                        <div class="item-card">
+                            <div class="flex items-center gap-4">
+                                <img src="${d.img}" class="w-12 h-12 rounded-xl object-cover shadow-lg border border-white/5">
+                                <span class="text-sm font-bold tracking-tight">${d.name}</span>
+                            </div>
+                            <a href="${d.link}" target="_blank" class="px-5 py-2 bg-white text-black text-[10px] font-black rounded-full hover:bg-purple-500 hover:text-white transition uppercase">Get</a>
+                        </div>`;
+                });
+            });
+        };
 
-        showTab('games');
+        window.adminCheck = () => { if(prompt("Pass:") === "🇾🇪*야미, 네 삼촌|  |يامي عمكم*") toggleAdmin(); };
+        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.toggle('open');
+        
+        // تشغيل قسم الألعاب عند الفتح
+        switchTab('games');
     </script>
 </body>
 </html>
