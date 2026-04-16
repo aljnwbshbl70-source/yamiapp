@@ -28,8 +28,15 @@
                 <button onclick="toggleAdmin()" class="bg-red-500/10 text-red-500 px-6 py-2 rounded-full font-bold text-xs border border-red-500/20">خروج 🚪</button>
             </div>
             
+            <div class="mb-8 p-6 bg-blue-600/5 rounded-[30px] border border-blue-500/20 text-center">
+                <p class="text-[10px] text-gray-400 mb-2 font-bold uppercase">تغيير الأفتار الشخصي</p>
+                <input type="file" id="avatarFile" accept="image/*" class="hidden">
+                <button onclick="document.getElementById('avatarFile').click()" class="text-xs font-black text-blue-400 bg-blue-500/10 px-6 py-2 rounded-xl border border-blue-500/20">اختر صورة جديدة 👤</button>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
                 <div class="space-y-4 bg-white/5 p-6 rounded-[30px] border border-white/5">
+                    <p class="text-[10px] text-purple-400 mb-2 font-bold uppercase">إضافة ملف جديد</p>
                     <input type="text" id="itemName" placeholder="اسم العنصر" class="search-box">
                     <input type="file" id="itemFile" accept="image/*" class="text-[10px] block w-full">
                     <textarea id="itemDesc" placeholder="الوصف" class="search-box h-20"></textarea>
@@ -118,7 +125,20 @@
             r.onload = () => res(r.result);
         });
 
-        // النشر
+        // رفع الأفتار (تمت إعادته ✅)
+        document.getElementById('avatarFile').onchange = async (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const text = await toBase64(file);
+                await setDoc(doc(db, "settings", "profile"), { avatar: text });
+                alert("تم تحديث الأفتار بنجاح! 🔥");
+            }
+        };
+
+        onSnapshot(doc(db, "settings", "profile"), d => {
+            if(d.exists()) document.getElementById('myAvatar').src = d.data().avatar;
+        });
+
         document.getElementById('saveBtn').onclick = async () => {
             const n = document.getElementById('itemName').value;
             const d = document.getElementById('itemDesc').value;
@@ -133,10 +153,9 @@
             await addDoc(collection(db, t), { name: n, desc: d, link: l, img: img, createdAt: ts });
             await addDoc(collection(db, "trending"), { name: n, desc: d, link: l, img: img, createdAt: ts, isAuto: true });
             alert("تم النشر بنجاح!");
-            location.reload(); // تحديث لضمان ظهور البيانات
+            location.reload();
         };
 
-        // عرض العناصر
         window.changeTab = (type) => {
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('tab-active', 'text-white'));
             document.getElementById('t-' + type).classList.add('tab-active', 'text-white');
@@ -179,7 +198,6 @@
             displayItems(currentItems.filter(i => i.name.toLowerCase().includes(term)));
         };
 
-        // الإدارة والحذف (تم الإصلاح ✅)
         window.toggleAdmin = () => {
             const sidebar = document.getElementById('adminSidebar');
             sidebar.classList.toggle('open');
@@ -191,12 +209,9 @@
         function loadAdminData() {
             const types = ['trending', 'games', 'apps', 'tools'];
             allAdminItems = [];
-            let loadedCount = 0;
-            
             types.forEach(t => {
                 onSnapshot(collection(db, t), snap => {
                     snap.forEach(d => {
-                        // تجنب التكرار بناءً على ID
                         if(!allAdminItems.find(x => x.id === d.id)) {
                             allAdminItems.push({ id: d.id, type: t, ...d.data() });
                         }
@@ -210,8 +225,6 @@
             const term = document.getElementById('adminSearch').value.toLowerCase();
             const list = document.getElementById('admin-items-list');
             list.innerHTML = "";
-            
-            // فلترة وعرض
             allAdminItems.filter(i => i.name.toLowerCase().includes(term)).forEach(item => {
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between bg-white/5 p-3 rounded-xl mb-2 border border-white/5";
@@ -226,16 +239,10 @@
         };
 
         window.deleteItem = async (t, id) => {
-            if(confirm("هل تريد حذف هذا العنصر نهائياً؟")) {
-                try {
-                    await deleteDoc(doc(db, t, id));
-                    alert("تم الحذف بنجاح!");
-                    // تحديث القائمة محلياً فوراً
-                    allAdminItems = allAdminItems.filter(i => i.id !== id);
-                    filterAdminItems();
-                } catch (e) {
-                    alert("خطأ في الحذف!");
-                }
+            if(confirm("هل تريد حذف هذا العنصر؟")) {
+                await deleteDoc(doc(db, t, id));
+                allAdminItems = allAdminItems.filter(i => i.id !== id);
+                filterAdminItems();
             }
         };
 
