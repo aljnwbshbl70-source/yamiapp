@@ -3,172 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇾🇪 야미, 네 삼촌 | يامي - المركز الرقمي</title>
+    <title>🇾🇪 يامي | YAMI HUB</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
     <style>
-        :root {
-            --neon-purple: #a855f7;
-            --neon-blue: #3b82f6;
-            --deep-black: #020205;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-
-        body {
-            background-color: var(--deep-black) !important;
-            color: #fff;
-            font-family: 'Tajawal', sans-serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        /* تأثير الخلفية المتوهجة */
-        .orb {
-            position: fixed;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
-            top: -200px; left: -200px;
-            z-index: -1;
-            filter: blur(100px);
-        }
-
-        /* تصميم الكروت الزجاجية */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: var(--neon-purple);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(168, 85, 247, 0.2);
-        }
-
-        /* Sidebar الإدارة */
-        #adminSidebar {
-            position: fixed;
-            top: 0; left: -100%;
-            width: 340px; height: 100vh;
-            background: #08080c;
-            border-right: 1px solid var(--neon-purple);
-            z-index: 1000;
-            padding: 30px;
-            transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1);
-        }
-
+        :root { --main-purple: #a855f7; --bg-dark: #050505; }
+        body { background-color: var(--bg-dark); color: white; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; }
+        .tab-btn.active { background: linear-gradient(135deg, #a855f7, #3b82f6); border: none; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
+        #adminSidebar { position: fixed; top: 0; left: -100%; width: 320px; height: 100vh; background: #0a0a0f; border-right: 1px solid var(--main-purple); z-index: 1000; transition: 0.5s cubic-bezier(0.85, 0, 0.15, 1); padding: 30px; }
         #adminSidebar.open { left: 0; }
-
-        .nav-btn {
-            padding: 12px 24px;
-            border-radius: 16px;
-            font-weight: bold;
-            font-size: 13px;
-            transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .nav-btn.active {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
-            border: none;
-            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
-        }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: slideUp 0.5s ease; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .profile-img {
-            width: 160px; height: 160px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(168, 85, 247, 0.3);
-            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
-        }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="orb"></div>
-    <div class="orb" style="top: auto; bottom: -200px; left: auto; right: -200px; background: rgba(59, 130, 246, 0.1);"></div>
-
     <aside id="adminSidebar">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-xl font-black text-purple-500">لوحة التحكم</h2>
-            <button onclick="toggleAdmin()" class="text-gray-500 hover:text-white text-2xl">✕</button>
-        </div>
+        <h2 class="text-xl font-black mb-8 text-purple-500">إدارة المحتوى</h2>
         <div class="space-y-4">
-            <input type="text" id="itemName" placeholder="الاسم (لعبة/تطبيق)" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-sm outline-none focus:border-purple-500 transition">
-            <input type="text" id="itemImg" placeholder="رابط الصورة المباشر" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-sm outline-none focus:border-purple-500 transition">
-            <input type="text" id="itemLink" placeholder="رابط التحميل" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-sm outline-none focus:border-purple-500 transition">
-            
-            <select id="itemType" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl text-sm outline-none">
-                <option value="games">إضافة إلى الألعاب 🎮</option>
-                <option value="apps">إضافة إلى التطبيقات 📱</option>
+            <input type="text" id="itemName" placeholder="اسم العنصر" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10 focus:border-purple-500">
+            <input type="text" id="itemImg" placeholder="رابط الصورة المباشر" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
+            <input type="text" id="itemDesc" placeholder="وصف قصير" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
+            <input type="text" id="itemLink" placeholder="رابط التحميل" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
+            <select id="itemType" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
+                <option value="games">لعبة 🎮</option>
+                <option value="apps">تطبيق 📱</option>
+                <option value="tools">أداة 🛠️</option>
             </select>
-
-            <button id="publishBtn" class="w-full py-4 bg-purple-600 rounded-2xl font-black text-sm shadow-xl hover:bg-purple-500 transition mt-6">نشر الآن 🚀</button>
+            <button id="saveBtn" class="w-full py-4 bg-purple-600 rounded-2xl font-black hover:bg-purple-500 transition">نشر الآن 🚀</button>
         </div>
+        <button onclick="toggleAdmin()" class="mt-10 text-gray-500 text-xs uppercase tracking-widest">إغلاق اللوحة</button>
     </aside>
 
-    <header class="pt-20 pb-10 text-center px-6">
-        <div class="mb-6 inline-block relative">
+    <header class="pt-16 pb-10 text-center px-6">
+        <div class="relative inline-block mb-6">
             <div class="absolute inset-0 bg-purple-600 blur-3xl opacity-20"></div>
-            <img src="https://aljnwbshbl70-source.github.io/yamiapp/232724.png" 
-                 onerror="this.src='https://via.placeholder.com/200?text=YAMI'" 
-                 class="profile-img relative">
+            <img src="https://i.ibb.co/hFBnP5S/image.png" class="relative w-32 h-32 rounded-full border-4 border-purple-500/30 p-1 object-cover shadow-2xl shadow-purple-500/20">
         </div>
-        <h1 class="text-4xl md:text-5xl font-black tracking-tighter mb-2">🇾🇪 야미, 네 삼촌 | يامي</h1>
-        <p class="text-gray-500 text-sm font-light italic">"المركز الرقمي الرسمي ليامي عمكم ⚡"</p>
+        <h1 class="text-3xl font-black tracking-tighter mb-2">🇾🇪 يامي | <span class="text-purple-500">YAMI</span></h1>
+        <p class="text-gray-500 text-xs">مرحباً بك في مستودع يامي عمكم الرقمي ⚡</p>
 
-        <div class="mt-10 flex justify-center gap-3">
-            <button onclick="openTab('games')" id="btn-games" class="nav-btn active">الألعاب 🎮</button>
-            <button onclick="openTab('apps')" id="btn-apps" class="nav-btn">التطبيقات 📱</button>
-            <button onclick="openTab('social')" id="btn-social" class="nav-btn">تواصل 🌐</button>
+        <div class="mt-10 flex flex-wrap justify-center gap-2">
+            <button onclick="showTab('games')" class="tab-btn active glass px-6 py-3 text-xs font-bold" id="btn-games">الألعاب</button>
+            <button onclick="showTab('apps')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-apps">التطبيقات</button>
+            <button onclick="showTab('tools')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-tools">الأدوات</button>
+            <button onclick="showTab('social')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-social">تواصل</button>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 pb-40">
-        
-        <div id="tab-games" class="tab-content active">
-            <div id="games-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
-        </div>
-
-        <div id="tab-apps" class="tab-content">
-            <div id="apps-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
-        </div>
-
-        <div id="tab-social" class="tab-content">
-            <div class="max-w-md mx-auto space-y-4">
-                <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="glass-card p-6 flex items-center justify-between group">
-                    <div class="flex items-center gap-4">
-                        <i class="fab fa-instagram text-3xl text-pink-500"></i>
-                        <span class="font-bold">Instagram</span>
-                    </div>
-                    <i class="fas fa-arrow-left opacity-0 group-hover:opacity-100 transition"></i>
-                </a>
-                <a href="https://wa.me/966574360046" target="_blank" class="glass-card p-6 flex items-center justify-between group">
-                    <div class="flex items-center gap-4">
-                        <i class="fab fa-whatsapp text-3xl text-green-500"></i>
-                        <span class="font-bold">WhatsApp</span>
-                    </div>
-                    <i class="fas fa-arrow-left opacity-0 group-hover:opacity-100 transition"></i>
-                </a>
+    <main class="max-w-4xl mx-auto px-6 pb-40">
+        <div id="grid-content" class="grid grid-cols-1 md:grid-cols-2 gap-3">
             </div>
-        </div>
 
+        <div id="social-content" class="hidden space-y-3 max-w-sm mx-auto">
+            <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="glass p-5 flex items-center gap-4 hover:bg-pink-500/10 transition">
+                <i class="fab fa-instagram text-2xl text-pink-500"></i> إنستقرام يامي
+            </a>
+            <a href="https://wa.me/966574360046" target="_blank" class="glass p-5 flex items-center gap-4 hover:bg-green-500/10 transition">
+                <i class="fab fa-whatsapp text-2xl text-green-500"></i> واتساب يامي
+            </a>
+        </div>
     </main>
 
-    <button onclick="checkAdmin()" class="fixed bottom-6 left-6 w-10 h-10 bg-white/5 rounded-full border border-white/10 flex items-center justify-center text-xs text-gray-600 hover:text-white transition">⚙️</button>
+    <div id="itemModal" class="modal">
+        <div class="glass max-w-md w-full p-8 text-center relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500">✕</button>
+            <img id="modalImg" src="" class="w-32 h-32 mx-auto rounded-3xl mb-6 shadow-xl object-cover">
+            <h2 id="modalTitle" class="text-2xl font-black mb-2"></h2>
+            <p id="modalDesc" class="text-gray-400 text-sm mb-8"></p>
+            
+            <div id="downloadArea">
+                <button onclick="startFollowCheck()" class="w-full py-4 bg-white text-black rounded-2xl font-black text-sm">تابعني لفتح التحميل 🔒</button>
+            </div>
+            <a id="realDownloadBtn" href="#" target="_blank" class="hidden w-full py-4 bg-green-600 rounded-2xl font-black text-sm animate-bounce">تحميل الآن جاهز ✅</a>
+        </div>
+    </div>
+
+    <button onclick="authAdmin()" class="fixed bottom-6 left-6 opacity-10 hover:opacity-100 transition text-[10px]">ADMIN</button>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
@@ -186,54 +100,90 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- نظام الإدارة ---
-        window.checkAdmin = () => {
-            if (prompt("كلمة المرور يا عمنا:") === "🇾🇪*야미, 네 삼촌|  |يامي عمكم*") {
-                toggleAdmin();
+        let activeTab = 'games';
+        const pass = "🇾🇪*야미, 네 삼촌|  |يامي عمكم*";
+
+        // إدارة التابات
+        window.showTab = (tab) => {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + tab).classList.add('active');
+            
+            if(tab === 'social') {
+                document.getElementById('grid-content').classList.add('hidden');
+                document.getElementById('social-content').classList.remove('hidden');
+            } else {
+                document.getElementById('grid-content').classList.remove('hidden');
+                document.getElementById('social-content').classList.add('hidden');
+                loadData(tab);
             }
         };
 
-        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.toggle('open');
+        // تحميل البيانات من فايربيز
+        function loadData(type) {
+            const q = query(collection(db, type), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snap) => {
+                const grid = document.getElementById('grid-content');
+                grid.innerHTML = "";
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    grid.innerHTML += `
+                        <button onclick="openDetails('${data.name}', '${data.img}', '${data.desc || 'لا يوجد وصف حالياً'}', '${data.link}')" 
+                                class="glass p-5 text-right flex justify-between items-center group hover:border-purple-500 transition">
+                            <span class="font-bold text-sm">${data.name}</span>
+                            <i class="fas fa-chevron-left text-xs opacity-30 group-hover:translate-x-[-5px] transition"></i>
+                        </button>
+                    `;
+                });
+            });
+        }
 
-        // --- النشر ---
-        document.getElementById('publishBtn').onclick = async () => {
+        // نافذة التفاصيل والتحميل
+        window.openDetails = (title, img, desc, link) => {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalImg').src = img;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('realDownloadBtn').href = link;
+            
+            // إعادة ضبط زر التحميل
+            document.getElementById('downloadArea').classList.remove('hidden');
+            document.getElementById('realDownloadBtn').classList.add('hidden');
+            
+            document.getElementById('itemModal').classList.add('active');
+        };
+
+        window.startFollowCheck = () => {
+            window.open('https://www.instagram.com/d_a_r_k_j7', '_blank');
+            setTimeout(() => {
+                document.getElementById('downloadArea').classList.add('hidden');
+                document.getElementById('realDownloadBtn').classList.remove('hidden');
+            }, 2000); // يظهر زر التحميل بعد ثانيتين من فتح الرابط
+        };
+
+        window.closeModal = () => document.getElementById('itemModal').classList.remove('active');
+
+        // الإدارة
+        window.authAdmin = () => {
+            if(prompt("كلمة المرور:") === pass) document.getElementById('adminSidebar').classList.add('open');
+        };
+        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.remove('open');
+
+        document.getElementById('saveBtn').onclick = async () => {
             const name = document.getElementById('itemName').value;
             const img = document.getElementById('itemImg').value;
+            const desc = document.getElementById('itemDesc').value;
             const link = document.getElementById('itemLink').value;
             const type = document.getElementById('itemType').value;
 
             if(name && img && link) {
-                await addDoc(collection(db, type), { name, img, link, createdAt: serverTimestamp() });
-                alert("تم النشر بنجاح! 🎉");
+                await addDoc(collection(db, type), { name, img, desc, link, createdAt: serverTimestamp() });
+                alert("تم النشر بنجاح!");
                 location.reload();
             }
         };
 
-        // --- جلب البيانات ---
-        function sync(col, gridId) {
-            onSnapshot(query(collection(db, col), orderBy("createdAt", "desc")), (snap) => {
-                const grid = document.getElementById(gridId);
-                grid.innerHTML = "";
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    grid.innerHTML += `
-                        <div class="glass-card p-4 text-center">
-                            <img src="${d.img}" class="w-full h-28 object-cover rounded-xl mb-3 shadow-lg" onerror="this.src='https://via.placeholder.com/150'">
-                            <h3 class="text-[10px] font-bold truncate mb-3">${d.name}</h3>
-                            <a href="${d.link}" target="_blank" class="block py-2 bg-white/5 rounded-lg text-[9px] font-black hover:bg-white hover:text-black transition">DOWNLOAD</a>
-                        </div>`;
-                });
-            });
-        }
-        sync('games', 'games-grid'); sync('apps', 'apps-grid');
-
-        // --- تبديل التابات ---
-        window.openTab = (tab) => {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            document.getElementById('btn-' + tab).classList.add('active');
-        };
+        // البداية
+        showTab('games');
     </script>
 </body>
 </html>
