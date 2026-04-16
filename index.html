@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇾🇪 야미, 네 삼촌 | يامي - المركز الرقمي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --neon-purple: #a855f7;
+            --neon-blue: #3b82f6;
+            --neon-cyan: #06b6d4;
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            scroll-behavior: smooth;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+            transform: translateY(-5px);
+        }
+        .neon-text { text-shadow: 0 0 10px var(--neon-purple); }
+        .hero-gradient {
+            background: radial-gradient(circle at center, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+        }
+        .btn-main {
+            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-blue) 100%);
+        }
+    </style>
+</head>
+<body class="hero-gradient min-h-screen">
+
+    <section class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <div class="relative mb-6">
+            <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-cyan-500 rounded-full blur opacity-75 animate-pulse"></div>
+            <img src="https://via.placeholder.com/150" alt="Logo" class="relative w-32 h-32 rounded-full border-2 border-white/20 object-cover">
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black neon-text mb-4">🇾🇪 야미, 네 삼촌 | يامي</h1>
+        <p class="text-gray-400 text-lg mb-8">مركزك الرقمي الشخصي لكل أدواتي ومحتواي ⚡</p>
+        
+        <div class="flex flex-col gap-4 w-full max-w-xs">
+            <a href="#hub" class="btn-main py-4 rounded-2xl font-bold text-white shadow-lg hover:scale-105 transition">ابدأ الآن 🚀</a>
+            <button onclick="openRandom()" class="glass-card py-3 rounded-2xl text-sm border-white/10 flex items-center justify-center gap-2">
+                <i class="fas fa-dice"></i> مفاجأة
+            </button>
+        </div>
+    </section>
+
+    <main id="hub" class="max-w-5xl mx-auto px-6 py-20 space-y-20">
+
+        <section>
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2 text-cyan-400">
+                <i class="fas fa-star"></i> اختياراتي المميزة
+            </h2>
+            <div id="featured-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+        </section>
+
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">الألعاب</h2>
+                <span class="text-xs text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/30">أفضل لعبة هذا الأسبوع 🔥</span>
+            </div>
+            <div id="games-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold mb-6">التطبيقات</h2>
+            <div id="apps-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold mb-6 text-cyan-500">الأدوات ⚡</h2>
+            <div id="tools-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <h2 class="text-2xl font-bold">تواصل معي 🌐</h2>
+                <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="glass-card p-4 rounded-2xl flex items-center gap-4 hover:bg-pink-600/20">
+                    <i class="fab fa-instagram text-3xl text-pink-500"></i>
+                    <span>تابعني على إنستغرام 📸</span>
+                </a>
+                <a href="https://wa.me/966574360046" target="_blank" class="glass-card p-4 rounded-2xl flex items-center gap-4 hover:bg-green-600/20">
+                    <i class="fab fa-whatsapp text-3xl text-green-500"></i>
+                    <span>تواصل معي عبر واتساب 💬</span>
+                </a>
+            </div>
+            <div class="glass-card p-6 rounded-3xl flex flex-col justify-center text-center">
+                <h3 class="text-gray-400 mb-2 italic">إحصائيات ذكية 📊</h3>
+                <div class="text-4xl font-black neon-text" id="fakeCounter">1,245</div>
+                <p class="text-xs text-gray-500 mt-2">زائر للمركز الرقمي اليوم</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-10 text-center text-gray-600 text-xs">
+        © 2026 🇾🇪 يامي | تم التطوير بواسطة The Small Developer
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6XA3vWHFskKV_6v5Xj7TTBO8W0bvhQ2E",
+            authDomain: "yamiapp-e7765.firebaseapp.com",
+            projectId: "yamiapp-e7765",
+            storageBucket: "yamiapp-e7765.firebasestorage.app",
+            messagingSenderId: "546559285368",
+            appId: "1:546559285368:web:8a2313d35126a93cb8758d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let linksList = [];
+
+        function fetchData(collectionName, containerId) {
+            const q = query(collection(db, collectionName), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    linksList.push(data.link);
+                    
+                    container.innerHTML += `
+                        <div class="glass-card p-4 rounded-3xl text-center group">
+                            <img src="${data.img}" class="w-full h-24 object-cover rounded-2xl mb-3 group-hover:scale-105 transition">
+                            <h4 class="text-sm font-bold mb-3">${data.name}</h4>
+                            <a href="${data.link}" target="_blank" class="block bg-white/5 py-2 rounded-xl text-xs hover:bg-white hover:text-black transition">تشغيل / تحميل</a>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // عشوائي
+        window.openRandom = () => {
+            if(linksList.length > 0) {
+                window.open(linksList[Math.floor(Math.random() * linksList.length)], '_blank');
+            }
+        };
+
+        fetchData('games', 'games-grid');
+        fetchData('apps', 'apps-grid');
+        fetchData('tools', 'tools-grid');
+    </script>
+</body>
+  </html>
+  
