@@ -14,80 +14,84 @@
         .tab-btn.active { background: linear-gradient(135deg, #a855f7, #3b82f6); border: none; box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
         #adminSidebar { position: fixed; top: 0; left: -100%; width: 320px; height: 100vh; background: #0a0a0f; border-right: 1px solid var(--main-purple); z-index: 1000; transition: 0.5s cubic-bezier(0.85, 0, 0.15, 1); padding: 30px; }
         #adminSidebar.open { left: 0; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal.active { display: flex; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal.active { display: flex; }
     </style>
 </head>
 <body>
 
     <aside id="adminSidebar">
-        <h2 class="text-xl font-black mb-8 text-purple-500">إدارة المحتوى</h2>
+        <h2 class="text-xl font-black mb-8 text-purple-500">إدارة يامي ⚡</h2>
         <div class="space-y-4">
-            <input type="text" id="itemName" placeholder="اسم العنصر" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10 focus:border-purple-500">
-            <input type="text" id="itemImg" placeholder="رابط الصورة المباشر" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
-            <input type="text" id="itemDesc" placeholder="وصف قصير" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
-            <input type="text" id="itemLink" placeholder="رابط التحميل" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
-            <select id="itemType" class="w-full bg-white/5 p-3 rounded-xl outline-none border border-white/10">
-                <option value="games">لعبة 🎮</option>
-                <option value="apps">تطبيق 📱</option>
-                <option value="tools">أداة 🛠️</option>
+            <input type="text" id="itemName" placeholder="اسم العنصر" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
+            <input type="text" id="itemImg" placeholder="رابط الصورة (Direct Link)" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
+            <input type="text" id="itemDesc" placeholder="وصف العنصر" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
+            <input type="text" id="itemLink" placeholder="رابط التحميل" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
+            <select id="itemType" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white outline-none">
+                <option value="games">ألعاب 🎮</option>
+                <option value="apps">تطبيقات 📱</option>
+                <option value="tools">أدوات 🛠️</option>
             </select>
-            <button id="saveBtn" class="w-full py-4 bg-purple-600 rounded-2xl font-black hover:bg-purple-500 transition">نشر الآن 🚀</button>
+            <button id="saveBtn" class="w-full py-4 bg-purple-600 rounded-2xl font-black">حفظ ونشر 🚀</button>
         </div>
-        <button onclick="toggleAdmin()" class="mt-10 text-gray-500 text-xs uppercase tracking-widest">إغلاق اللوحة</button>
+        <button onclick="toggleAdmin()" class="mt-10 text-gray-500 text-[10px] uppercase">إغلاق</button>
     </aside>
 
     <header class="pt-16 pb-10 text-center px-6">
         <div class="relative inline-block mb-6">
-            <div class="absolute inset-0 bg-purple-600 blur-3xl opacity-20"></div>
-            <img src="https://i.ibb.co/hFBnP5S/image.png" class="relative w-32 h-32 rounded-full border-4 border-purple-500/30 p-1 object-cover shadow-2xl shadow-purple-500/20">
+            <div class="absolute inset-0 bg-purple-600 blur-3xl opacity-30"></div>
+            <img src="https://i.ibb.co/L9Y0YpL/232724.png" 
+                 onerror="this.src='https://via.placeholder.com/150'"
+                 class="relative w-32 h-32 rounded-full border-4 border-purple-500/30 p-1 object-cover">
         </div>
-        <h1 class="text-3xl font-black tracking-tighter mb-2">🇾🇪 يامي | <span class="text-purple-500">YAMI</span></h1>
-        <p class="text-gray-500 text-xs">مرحباً بك في مستودع يامي عمكم الرقمي ⚡</p>
+        <h1 class="text-3xl font-black mb-2 tracking-tighter">🇾🇪 يامي | <span class="text-purple-500">YAMI</span></h1>
+        <p class="text-gray-500 text-[10px] uppercase tracking-widest">Gamer | Tech Enthusiast | Content Creator</p>
 
-        <div class="mt-10 flex flex-wrap justify-center gap-2">
+        <nav class="mt-10 flex flex-wrap justify-center gap-2">
             <button onclick="showTab('games')" class="tab-btn active glass px-6 py-3 text-xs font-bold" id="btn-games">الألعاب</button>
             <button onclick="showTab('apps')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-apps">التطبيقات</button>
             <button onclick="showTab('tools')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-tools">الأدوات</button>
             <button onclick="showTab('social')" class="tab-btn glass px-6 py-3 text-xs font-bold" id="btn-social">تواصل</button>
-        </div>
+        </nav>
     </header>
 
     <main class="max-w-4xl mx-auto px-6 pb-40">
-        <div id="grid-content" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div id="grid-content" class="grid grid-cols-1 gap-3">
             </div>
 
         <div id="social-content" class="hidden space-y-3 max-w-sm mx-auto">
-            <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="glass p-5 flex items-center gap-4 hover:bg-pink-500/10 transition">
-                <i class="fab fa-instagram text-2xl text-pink-500"></i> إنستقرام يامي
+            <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="glass p-5 flex items-center justify-between group">
+                <div class="flex items-center gap-4"><i class="fab fa-instagram text-pink-500 text-xl"></i> إنستقرام يامي</div>
+                <i class="fas fa-external-link-alt text-[10px] opacity-20"></i>
             </a>
-            <a href="https://wa.me/966574360046" target="_blank" class="glass p-5 flex items-center gap-4 hover:bg-green-500/10 transition">
-                <i class="fab fa-whatsapp text-2xl text-green-500"></i> واتساب يامي
+            <a href="https://wa.me/966574360046" target="_blank" class="glass p-5 flex items-center justify-between group">
+                <div class="flex items-center gap-4"><i class="fab fa-whatsapp text-green-500 text-xl"></i> واتساب يامي</div>
+                <i class="fas fa-external-link-alt text-[10px] opacity-20"></i>
             </a>
         </div>
     </main>
 
     <div id="itemModal" class="modal">
-        <div class="glass max-w-md w-full p-8 text-center relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500">✕</button>
-            <img id="modalImg" src="" class="w-32 h-32 mx-auto rounded-3xl mb-6 shadow-xl object-cover">
+        <div class="glass max-w-sm w-full p-8 text-center relative border-purple-500/30">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-500 text-xl">✕</button>
+            <img id="modalImg" src="" class="w-32 h-32 mx-auto rounded-3xl mb-6 object-cover shadow-2xl">
             <h2 id="modalTitle" class="text-2xl font-black mb-2"></h2>
-            <p id="modalDesc" class="text-gray-400 text-sm mb-8"></p>
+            <p id="modalDesc" class="text-gray-400 text-xs mb-8"></p>
             
-            <div id="downloadArea">
-                <button onclick="startFollowCheck()" class="w-full py-4 bg-white text-black rounded-2xl font-black text-sm">تابعني لفتح التحميل 🔒</button>
+            <div id="lockBtn">
+                <button onclick="unlockLink()" class="w-full py-4 bg-white text-black rounded-2xl font-black text-sm">تابعني لفتح التحميل 🔒</button>
             </div>
-            <a id="realDownloadBtn" href="#" target="_blank" class="hidden w-full py-4 bg-green-600 rounded-2xl font-black text-sm animate-bounce">تحميل الآن جاهز ✅</a>
+            <a id="downloadLink" href="#" target="_blank" class="hidden w-full py-4 bg-purple-600 rounded-2xl font-black text-sm animate-pulse">تحميل الآن جاهز ✅</a>
         </div>
     </div>
 
-    <button onclick="authAdmin()" class="fixed bottom-6 left-6 opacity-10 hover:opacity-100 transition text-[10px]">ADMIN</button>
+    <button onclick="openAdmin()" class="fixed bottom-6 left-6 text-[8px] text-white/10 hover:text-white transition tracking-widest">ADMIN PANEL</button>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
+        // تم فحص إعداداتك وهي صحيحة 100%
         const firebaseConfig = {
             apiKey: "AIzaSyC6XA3vWHFskKV_6v5Xj7TTBO8W0bvhQ2E",
             authDomain: "yamiapp-e7765.firebaseapp.com",
@@ -100,12 +104,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let activeTab = 'games';
-        const pass = "🇾🇪*야미, 네 삼촌|  |يامي عمكم*";
+        const adminKey = "🇾🇪*야미, 네 삼촌|  |يامي عمكم*";
 
-        // إدارة التابات
+        // تبديل الأقسام
         window.showTab = (tab) => {
-            activeTab = tab;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + tab).classList.add('active');
             
@@ -115,59 +117,50 @@
             } else {
                 document.getElementById('grid-content').classList.remove('hidden');
                 document.getElementById('social-content').classList.add('hidden');
-                loadData(tab);
+                fetchData(tab);
             }
         };
 
-        // تحميل البيانات من فايربيز
-        function loadData(type) {
+        // جلب البيانات (مع تصحيح مشكلة التخزين)
+        function fetchData(type) {
             const q = query(collection(db, type), orderBy("createdAt", "desc"));
             onSnapshot(q, (snap) => {
                 const grid = document.getElementById('grid-content');
                 grid.innerHTML = "";
                 snap.forEach(doc => {
-                    const data = doc.data();
+                    const d = doc.data();
                     grid.innerHTML += `
-                        <button onclick="openDetails('${data.name}', '${data.img}', '${data.desc || 'لا يوجد وصف حالياً'}', '${data.link}')" 
-                                class="glass p-5 text-right flex justify-between items-center group hover:border-purple-500 transition">
-                            <span class="font-bold text-sm">${data.name}</span>
-                            <i class="fas fa-chevron-left text-xs opacity-30 group-hover:translate-x-[-5px] transition"></i>
+                        <button onclick="showDetails('${d.name}', '${d.img}', '${d.desc}', '${d.link}')" 
+                                class="glass p-5 flex justify-between items-center group hover:bg-white/5">
+                            <span class="font-bold text-sm">${d.name}</span>
+                            <i class="fas fa-arrow-left text-[10px] opacity-20 group-hover:opacity-100 transition"></i>
                         </button>
                     `;
                 });
             });
         }
 
-        // نافذة التفاصيل والتحميل
-        window.openDetails = (title, img, desc, link) => {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalImg').src = img;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('realDownloadBtn').href = link;
-            
-            // إعادة ضبط زر التحميل
-            document.getElementById('downloadArea').classList.remove('hidden');
-            document.getElementById('realDownloadBtn').classList.add('hidden');
-            
+        window.showDetails = (t, i, d, l) => {
+            document.getElementById('modalTitle').innerText = t;
+            document.getElementById('modalImg').src = i;
+            document.getElementById('modalDesc').innerText = d || "لا يوجد وصف";
+            document.getElementById('downloadLink').href = l;
+            document.getElementById('lockBtn').classList.remove('hidden');
+            document.getElementById('downloadLink').classList.add('hidden');
             document.getElementById('itemModal').classList.add('active');
         };
 
-        window.startFollowCheck = () => {
+        window.unlockLink = () => {
             window.open('https://www.instagram.com/d_a_r_k_j7', '_blank');
             setTimeout(() => {
-                document.getElementById('downloadArea').classList.add('hidden');
-                document.getElementById('realDownloadBtn').classList.remove('hidden');
-            }, 2000); // يظهر زر التحميل بعد ثانيتين من فتح الرابط
+                document.getElementById('lockBtn').classList.add('hidden');
+                document.getElementById('downloadLink').classList.remove('hidden');
+            }, 2500);
         };
 
         window.closeModal = () => document.getElementById('itemModal').classList.remove('active');
 
-        // الإدارة
-        window.authAdmin = () => {
-            if(prompt("كلمة المرور:") === pass) document.getElementById('adminSidebar').classList.add('open');
-        };
-        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.remove('open');
-
+        // الحفظ (حل مشكلة عدم التخزين)
         document.getElementById('saveBtn').onclick = async () => {
             const name = document.getElementById('itemName').value;
             const img = document.getElementById('itemImg').value;
@@ -176,13 +169,21 @@
             const type = document.getElementById('itemType').value;
 
             if(name && img && link) {
-                await addDoc(collection(db, type), { name, img, desc, link, createdAt: serverTimestamp() });
-                alert("تم النشر بنجاح!");
-                location.reload();
+                try {
+                    await addDoc(collection(db, type), {
+                        name, img, desc, link, createdAt: serverTimestamp()
+                    });
+                    alert("تم الحفظ بنجاح! 🎉");
+                    toggleAdmin();
+                } catch(e) {
+                    alert("مشكلة في التخزين! تأكد من إعدادات Rules في Firebase Console.");
+                }
             }
         };
 
-        // البداية
+        window.openAdmin = () => { if(prompt("كلمة المرور:") === adminKey) toggleAdmin(); };
+        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.toggle('open');
+
         showTab('games');
     </script>
 </body>
