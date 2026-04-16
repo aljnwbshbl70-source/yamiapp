@@ -3,75 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇾🇪 야미, 네 삼촌 | يامي</title>
+    <title>🇾🇪 야미, 네 삼촌 | يامي - المركز الرقمي الفخم</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
     <style>
-        :root { --neon-purple: #a855f7; --main-bg: #050505; }
-        body { background-color: var(--main-bg) !important; color: white !important; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        #adminSidebar { position: fixed; top: 0; left: -100%; width: 300px; height: 100%; background: #0f0f1b; border-right: 1px solid var(--neon-purple); transition: 0.5s; z-index: 1000; padding: 20px; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+        /* --- Root & Constants --- */
+        :root {
+            --neon-purple: #a855f7;
+            --neon-blue: #3b82f6;
+            --neon-cyan: #06b6d4;
+            --deep-dark: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- Global Reset --- */
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--deep-dark) !important;
+            color: #ffffff !important;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--deep-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 10px; }
+
+        /* --- Layout & Background --- */
+        .bg-glow {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- Glassmorphism Components --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-panel:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* --- Admin Sidebar --- */
+        #adminSidebar {
+            position: fixed;
+            top: 0; left: -100%;
+            width: 320px; height: 100vh;
+            background: #0a0a0f;
+            border-right: 1px solid var(--neon-purple);
+            z-index: 2000;
+            padding: 2rem;
+            transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+        }
+
         #adminSidebar.open { left: 0; }
-        .admin-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 100%; padding: 10px; border-radius: 10px; margin-bottom: 10px; color: white; outline: none; font-size: 12px; }
-        .active-tab { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%) !important; border: none !important; }
-        .tab-content { display: none; }
-        .active-content { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .admin-input {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 0.8rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .admin-input:focus { border-color: var(--neon-purple); background: rgba(168, 85, 247, 0.05); }
+
+        /* --- Tabs Logic --- */
+        .tab-content { display: none; opacity: 0; }
+        .tab-content.active { display: block; opacity: 1; animation: fadeInUp 0.6s ease forwards; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-btn {
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue)) !important;
+            color: white !important;
+            border: none;
+        }
+
+        /* --- Animations --- */
+        .neon-text { text-shadow: 0 0 15px rgba(168, 85, 247, 0.6); }
+
+        .float { animation: floating 4s ease-in-out infinite; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- Grid & Cards --- */
+        .item-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 120px;
+            object-cover: cover;
+            border-radius: 1rem;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        /* --- Social Buttons --- */
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            border-radius: 1.5rem;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .social-insta { background: rgba(225, 48, 108, 0.1); border: 1px solid rgba(225, 48, 108, 0.2); color: #e1306c; }
+        .social-wa { background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.2); color: #25d366; }
+
+        .social-btn:hover { transform: scale(1.02); }
+
     </style>
 </head>
 <body>
 
-    <div class="p-4 flex justify-end">
-        <button onclick="askAuth()" class="text-[10px] text-gray-600 hover:text-purple-400">الإدارة ⚙️</button>
-    </div>
+    <div class="bg-glow"></div>
 
-    <div id="adminSidebar">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="font-bold text-purple-400">لوحة التحكم</h3>
-            <button onclick="closeSidebar()" class="text-gray-500">✕</button>
+    <aside id="adminSidebar">
+        <div class="flex items-center justify-between mb-10">
+            <h2 class="text-xl font-black neon-text">الإدارة المركزية</h2>
+            <button onclick="toggleAdmin()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-500 transition">✕</button>
         </div>
-        <div class="space-y-4">
-            <input type="text" id="itemName" placeholder="اسم اللعبة/التطبيق" class="admin-input">
-            <input type="text" id="itemImg" placeholder="رابط الصورة (URL)" class="admin-input">
+
+        <div class="space-y-2">
+            <label class="text-[10px] text-gray-500 px-2 uppercase tracking-widest">إضافة عنصر جديد</label>
+            <input type="text" id="itemName" placeholder="اسم اللعبة أو التطبيق" class="admin-input">
+            <input type="text" id="itemImg" placeholder="رابط الصورة المباشر" class="admin-input">
             <input type="text" id="itemLink" placeholder="رابط التحميل" class="admin-input">
-            <select id="itemType" class="admin-input">
-                <option value="games">لعبة</option>
-                <option value="apps">تطبيق</option>
-            </select>
-            <button id="addBtn" class="w-full bg-purple-600 py-2 rounded-xl text-sm font-bold">حفظ البيانات 🚀</button>
+            
+            <div class="grid grid-cols-2 gap-2 mb-6">
+                <button onclick="setItemType('games')" id="typeGames" class="py-3 rounded-xl bg-white/5 border border-white/10 text-xs active-type">لعبة 🎮</button>
+                <button onclick="setItemType('apps')" id="typeApps" class="py-3 rounded-xl bg-white/5 border border-white/10 text-xs">تطبيق 📱</button>
+            </div>
+
+            <button id="saveBtn" class="w-full py-4 rounded-2xl bg-purple-600 font-bold shadow-lg shadow-purple-600/30 hover:bg-purple-500 transition mt-4">نشر الآن 🚀</button>
         </div>
-    </div>
 
-    <header class="py-10 text-center">
-        <img src="https://aljnwbshbl70-source.github.io/yamiapp/F76ebbeddd192a631784bdd8cc6b86f9.png" 
-             onerror="this.src='https://via.placeholder.com/150'" 
-             class="w-28 h-28 rounded-full mx-auto border-2 border-purple-500 p-1 mb-4 shadow-lg shadow-purple-500/20 object-cover">
-        <h1 class="text-2xl font-black text-purple-400">🇾🇪 야미, 네 삼촌 | يامي</h1>
-        <p class="text-gray-500 text-xs mt-1 italic">المركز الرقمي الشخصي ⚡</p>
-    </header>
+        <div class="mt-auto pt-10 border-t border-white/5 opacity-30 text-[10px] text-center">
+            The Small Developer Admin Panel v2.0
+        </div>
+    </aside>
 
-    <nav class="max-w-xs mx-auto px-4 grid grid-cols-3 gap-2 mb-10">
-        <button onclick="showTab('games')" id="btn-games" class="tab-btn glass py-2 rounded-xl text-[10px] font-bold active-tab">الألعاب</button>
-        <button onclick="showTab('apps')" id="btn-apps" class="tab-btn glass py-2 rounded-xl text-[10px] font-bold">التطبيقات</button>
-        <button onclick="showTab('contact')" id="btn-contact" class="tab-btn glass py-2 rounded-xl text-[10px] font-bold">تواصل</button>
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="font-black text-lg tracking-tighter">야미 | <span class="text-purple-500">YAMI</span></div>
+        <button onclick="startAdminFlow()" class="text-[10px] text-gray-500 hover:text-white transition uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/10">Admin Access</button>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-6 mb-20">
-        <div id="games" class="tab-content active-content">
-            <div id="games-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+    <section class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
+        <div class="relative mb-10 float">
+            <div class="absolute -inset-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full blur-2xl opacity-40 animate-pulse"></div>
+            <img src="https://aljnwbshbl70-source.github.io/yamiapp/F76ebbeddd192a631784bdd8cc6b86f9.png" 
+                 onerror="this.src='https://via.placeholder.com/200'" 
+                 class="relative w-40 h-40 rounded-full border-4 border-white/10 p-1.5 object-cover">
         </div>
-        <div id="apps" class="tab-content">
-            <div id="apps-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+
+        <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tighter">🇾🇪 야미, 네 삼촌 | <span class="neon-text">يامي</span></h1>
+        <p class="text-gray-500 text-lg max-w-md mx-auto leading-relaxed">أهلاً بك في عالمي الرقمي، حيث تجد كل ألعابي وتطبيقاتي وأدواتي الخاصة ⚡</p>
+
+        <div class="mt-12 flex flex-wrap justify-center gap-3 max-w-sm">
+            <button onclick="switchTab('games')" class="nav-btn active glass-panel px-8 py-4 text-sm font-bold border-white/5">🎮 ألعابي</button>
+            <button onclick="switchTab('apps')" class="nav-btn glass-panel px-8 py-4 text-sm font-bold border-white/5">📱 تطبيقاتي</button>
+            <button onclick="switchTab('social')" class="nav-btn glass-panel px-8 py-4 text-sm font-bold border-white/5">🌐 تواصل</button>
         </div>
-        <div id="contact" class="tab-content text-center">
-            <div class="space-y-4 max-w-sm mx-auto">
-                <a href="https://wa.me/966574360046" target="_blank" class="glass block p-4 rounded-2xl flex items-center gap-4">
-                    <i class="fab fa-whatsapp text-green-500"></i> واتساب
+    </section>
+
+    <main class="max-w-6xl mx-auto px-6 pb-40">
+        
+        <div id="tab-games" class="tab-content active">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="w-12 h-1 bg-purple-600 rounded-full"></div>
+                <h2 class="text-2xl font-black">ألعاب يامي الخاصة</h2>
+            </div>
+            <div id="games-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div class="animate-pulse bg-white/5 h-48 rounded-3xl"></div>
+                <div class="animate-pulse bg-white/5 h-48 rounded-3xl"></div>
+                <div class="animate-pulse bg-white/5 h-48 rounded-3xl"></div>
+                <div class="animate-pulse bg-white/5 h-48 rounded-3xl"></div>
+            </div>
+        </div>
+
+        <div id="tab-apps" class="tab-content">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="w-12 h-1 bg-blue-600 rounded-full"></div>
+                <h2 class="text-2xl font-black">تطبيقاتي المختارة</h2>
+            </div>
+            <div id="apps-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div class="animate-pulse bg-white/5 h-48 rounded-3xl"></div>
+            </div>
+        </div>
+
+        <div id="tab-social" class="tab-content">
+            <div class="max-w-md mx-auto space-y-4">
+                <h2 class="text-center text-2xl font-black mb-10">قنوات التواصل المباشر</h2>
+                
+                <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="social-btn social-insta group">
+                    <i class="fab fa-instagram text-2xl group-hover:rotate-12 transition"></i>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] opacity-60">تابعني على</span>
+                        <span class="text-sm">إنستقرام | Instagram</span>
+                    </div>
+                </a>
+
+                <a href="https://wa.me/966574360046" target="_blank" class="social-btn social-wa group">
+                    <i class="fab fa-whatsapp text-2xl group-hover:rotate-12 transition"></i>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] opacity-60">دردش معي على</span>
+                        <span class="text-sm">واتساب | WhatsApp</span>
+                    </div>
                 </a>
             </div>
         </div>
+
     </main>
+
+    <footer class="py-10 border-t border-white/5 text-center">
+        <p class="text-[10px] text-gray-600 uppercase tracking-widest">Developed by The Small Developer © 2026</p>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
@@ -89,71 +288,83 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // الحماية وفتح السايد بار
+        // --- Core Logic ---
+        let currentType = 'games';
         const adminPass = "🇾🇪*야미, 네 삼촌|  |يامي عمكم*";
-        window.askAuth = () => {
-            const input = prompt("كلمة مرور الإدارة:");
+
+        // Admin Access
+        window.startAdminFlow = () => {
+            const input = prompt("كلمة مرور الإدارة يا عمنا:");
             if (input === adminPass) {
-                document.getElementById('adminSidebar').classList.add('open');
+                toggleAdmin();
             } else {
-                alert("كلمة مرور خاطئة!");
+                alert("للأسف، لا تملك الصلاحية!");
             }
         };
 
-        window.closeSidebar = () => document.getElementById('adminSidebar').classList.remove('open');
+        window.toggleAdmin = () => {
+            document.getElementById('adminSidebar').classList.toggle('open');
+        };
 
-        // إضافة البيانات إلى Firebase مع معالجة الأخطاء
-        document.getElementById('addBtn').onclick = async () => {
+        window.setItemType = (type) => {
+            currentType = type;
+            document.getElementById('typeGames').classList.toggle('active-type', type === 'games');
+            document.getElementById('typeApps').classList.toggle('active-type', type === 'apps');
+        };
+
+        // Firebase Save
+        document.getElementById('saveBtn').onclick = async () => {
             const name = document.getElementById('itemName').value;
             const img = document.getElementById('itemImg').value;
             const link = document.getElementById('itemLink').value;
-            const type = document.getElementById('itemType').value;
 
-            if (!name || !img || !link) {
-                alert("يرجى تعبئة جميع الخانات!");
-                return;
-            }
+            if (!name || !img || !link) return alert("امسح الخانات الناقصة!");
 
             try {
-                await addDoc(collection(db, type), {
+                await addDoc(collection(db, currentType), {
                     name, img, link, createdAt: serverTimestamp()
                 });
-                alert("تم حفظ البيانات ونشرها بنجاح! 🎉");
+                alert("تم النشر بنجاح! 🎉");
                 document.getElementById('itemName').value = "";
                 document.getElementById('itemImg').value = "";
                 document.getElementById('itemLink').value = "";
+                toggleAdmin();
             } catch (e) {
-                console.error("Error adding document: ", e);
-                alert("فشل الحفظ. تأكد من إعدادات الـ Rules في Firebase Console.");
+                alert("خطأ في الاتصال: " + e.message);
             }
         };
 
-        // جلب البيانات وعرضها
-        function loadData(col, gridId) {
-            const q = query(collection(db, col), orderBy("createdAt", "desc"));
-            onSnapshot(q, (snap) => {
+        // Firebase Sync
+        function syncData(collectionName, gridId) {
+            const q = query(collection(db, collectionName), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
                 const grid = document.getElementById(gridId);
                 grid.innerHTML = "";
-                snap.forEach(doc => {
+                snapshot.forEach((doc) => {
                     const data = doc.data();
                     grid.innerHTML += `
-                        <div class="glass p-3 rounded-2xl text-center">
-                            <img src="${data.img}" class="w-full h-24 object-cover rounded-xl mb-2" onerror="this.src='https://via.placeholder.com/100'">
-                            <h4 class="text-[10px] font-bold truncate">${data.name}</h4>
-                            <a href="${data.link}" target="_blank" class="block bg-white/10 py-1.5 rounded-lg text-[9px] mt-2 hover:bg-white hover:text-black transition">تحميل</a>
-                        </div>`;
+                        <div class="item-card glass-panel">
+                            <img src="${data.img}" onerror="this.src='https://via.placeholder.com/150'">
+                            <h3 class="text-xs font-bold truncate mb-3">${data.name}</h3>
+                            <a href="${data.link}" target="_blank" class="block py-2 bg-white/5 rounded-xl text-[9px] font-black hover:bg-white hover:text-black transition">DOWNLOAD</a>
+                        </div>
+                    `;
                 });
             });
         }
 
-        loadData('games', 'games-grid');
-        loadData('apps', 'apps-grid');
+        syncData('games', 'games-grid');
+        syncData('apps', 'apps-grid');
 
-        window.showTab = (id) => {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-content'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-            document.getElementById(id).classList.add('active-content');
-            document.getElementById('btn-' + id).classList.add('active-tab');
+        // Tab Switching
+        window.switchTab = (tab) => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            gsap.fromTo('#tab-' + tab, {y: 20, opacity: 0}, {y: 0, opacity: 1, duration: 0.5});
         };
     </script>
 </body>
