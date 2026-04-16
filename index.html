@@ -11,11 +11,13 @@
         body { background: #020205; color: white; font-family: 'Tajawal', sans-serif; overflow-x: hidden; }
         .glass-nav { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border-radius: 50px; border: 1px solid rgba(255,255,255,0.05); }
         .tab-active { background: linear-gradient(135deg, #a855f7, #3b82f6); color: white !important; }
-        #descModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        #descModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         #descModal.active { display: flex; animation: zoomIn 0.3s ease; }
         @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        #adminSidebar { position: fixed; top: 0; left: -100%; width: 320px; height: 100vh; background: #08080c; border-right: 2px solid #a855f7; z-index: 3000; transition: 0.5s; padding: 25px; overflow-y: auto; }
+        #adminSidebar { position: fixed; top: 0; left: -100%; width: 320px; height: 100vh; background: #08080c; border-right: 2px solid #a855f7; z-index: 5000; transition: 0.5s; padding: 25px; overflow-y: auto; }
         #adminSidebar.open { left: 0; }
+        .search-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 12px 20px; width: 100%; outline: none; transition: 0.3s; font-size: 12px; }
+        .search-box:focus { border-color: #a855f7; background: rgba(168, 85, 247, 0.05); }
     </style>
 </head>
 <body>
@@ -29,7 +31,7 @@
             <button onclick="document.getElementById('avatarFile').click()" class="text-[10px] bg-blue-600 px-4 py-2 rounded-lg font-black">اختر صورة 👤</button>
         </div>
 
-        <div class="space-y-4 mb-10">
+        <div class="space-y-4 mb-8">
             <input type="text" id="itemName" placeholder="اسم العنصر" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none text-sm">
             <input type="file" id="itemFile" accept="image/*" class="text-[10px] block w-full">
             <textarea id="itemDesc" placeholder="الوصف" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none text-sm h-16"></textarea>
@@ -44,22 +46,26 @@
         </div>
 
         <hr class="border-white/5 mb-6">
-        <h3 class="text-xs font-bold text-gray-500 mb-4">إدارة العناصر المنشورة:</h3>
-        <div id="admin-items-list" class="space-y-2">
-            </div>
+        <h3 class="text-xs font-bold text-purple-500 mb-2 uppercase">إدارة المحتوى والبحث 🗑️</h3>
+        <input type="text" id="adminSearch" oninput="filterAdminItems()" placeholder="ابحث في ملفاتك..." class="search-box mb-4">
+        <div id="admin-items-list" class="space-y-2 pb-10"></div>
 
-        <button onclick="toggleAdmin()" class="mt-8 text-gray-600 text-[10px] w-full">إغلاق اللوحة</button>
+        <button onclick="toggleAdmin()" class="mt-4 text-gray-600 text-[10px] w-full">إغلاق اللوحة</button>
     </aside>
 
-    <header class="pt-12 pb-8 text-center px-4">
+    <header class="pt-12 pb-4 text-center px-4">
         <div class="relative inline-block mb-4">
             <div class="absolute inset-0 bg-blue-500 blur-3xl opacity-20"></div>
             <img id="myAvatar" src="https://i.ibb.co/hFBnP5S/image.png" class="relative w-28 h-28 rounded-full border-2 border-white/10 p-1 object-cover">
         </div>
-        <h1 class="text-2xl font-black tracking-tighter italic italic">🇾🇪 يامي | <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">YAMI</span></h1>
+        <h1 class="text-2xl font-black tracking-tighter italic">🇾🇪 يامي | <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">YAMI</span></h1>
         
-        <nav class="mt-8 glass-nav inline-flex p-1 mx-auto overflow-x-auto max-w-full">
-            <button onclick="changeTab('trending')" id="t-trending" class="px-5 py-2 text-[10px] font-bold rounded-full tab-active transition whitespace-nowrap">جديد ورائج 🔥</button>
+        <div class="max-w-sm mx-auto mt-6 px-4">
+            <input type="text" id="mainSearch" oninput="searchItems()" placeholder="ابحث عن ألعاب، تطبيقات، أدوات..." class="search-box text-center">
+        </div>
+
+        <nav class="mt-6 glass-nav inline-flex p-1 mx-auto overflow-x-auto max-w-full">
+            <button onclick="changeTab('trending')" id="t-trending" class="px-5 py-2 text-[10px] font-bold rounded-full tab-active transition whitespace-nowrap">جديد 🔥</button>
             <button onclick="changeTab('games')" id="t-games" class="px-5 py-2 text-[10px] font-bold rounded-full transition text-gray-400 whitespace-nowrap">الألعاب</button>
             <button onclick="changeTab('apps')" id="t-apps" class="px-5 py-2 text-[10px] font-bold rounded-full transition text-gray-400 whitespace-nowrap">التطبيقات</button>
             <button onclick="changeTab('tools')" id="t-tools" class="px-5 py-2 text-[10px] font-bold rounded-full transition text-gray-400 whitespace-nowrap">الأدوات</button>
@@ -67,7 +73,7 @@
         </nav>
     </header>
 
-    <main class="max-w-md mx-auto px-6 pb-20">
+    <main class="max-w-md mx-auto px-6 pb-20 mt-4">
         <div id="content-area" class="space-y-3"></div>
         <div id="social-area" class="hidden space-y-3">
             <a href="https://www.instagram.com/d_a_r_k_j7" target="_blank" class="block p-5 bg-white/5 border border-pink-500/20 rounded-2xl flex items-center gap-4">
@@ -83,14 +89,14 @@
 
     <div id="descModal">
         <div class="bg-[#0a0a0f] border border-white/10 w-[90%] max-w-sm rounded-[30px] p-8 relative">
-            <button onclick="closeDesc()" class="absolute top-4 right-4 text-gray-500">✕</button>
-            <img id="modalImg" class="w-20 h-20 mx-auto rounded-2xl object-cover mb-4">
+            <button onclick="closeDesc()" class="absolute top-4 right-4 text-gray-500 text-xl">✕</button>
+            <img id="modalImg" src="" class="w-20 h-20 mx-auto rounded-2xl object-cover mb-4">
             <h2 id="modalName" class="text-xl font-black text-center mb-2"></h2>
-            <p id="modalDesc" class="text-gray-400 text-[11px] text-center mb-8"></p>
+            <p id="modalDesc" class="text-gray-400 text-[11px] text-center mb-8 leading-relaxed"></p>
             <div id="lockSection">
-                <button onclick="forceFollow()" class="w-full py-4 bg-white text-black rounded-2xl font-black text-xs">تابعني لفتح التحميل 🔒</button>
+                <button onclick="forceFollow()" class="w-full py-4 bg-white text-black rounded-2xl font-black text-xs shadow-xl">تابعني لفتح التحميل 🔒</button>
             </div>
-            <a id="downloadBtn" href="#" target="_blank" class="hidden w-full py-4 bg-purple-600 rounded-2xl font-black text-xs text-center block">تحميل الآن جاهز ✅</a>
+            <a id="downloadBtn" href="#" target="_blank" class="hidden w-full py-4 bg-purple-600 rounded-2xl font-black text-xs text-center block">تم التحقق! تحميل الآن ✅</a>
         </div>
     </div>
 
@@ -111,6 +117,8 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        let currentItems = []; // مصفوفة لتخزين العناصر الحالية للبحث
+        let adminItems = [];   // مصفوفة لإدارة الحذف
 
         const toBase64 = f => new Promise((res, rej) => {
             const r = new FileReader(); r.readAsDataURL(f);
@@ -123,7 +131,7 @@
             if(file) {
                 const text = await toBase64(file);
                 await setDoc(doc(db, "settings", "profile"), { avatar: text });
-                alert("تم التحديث!");
+                alert("تم تحديث الأفتار!");
             }
         };
 
@@ -140,9 +148,11 @@
             const type = document.getElementById('itemType').value;
 
             if(!file || !name) return alert("البيانات ناقصة!");
+            document.getElementById('saveBtn').innerText = "...جاري النشر";
             const img = await toBase64(file);
             await addDoc(collection(db, type), { name, desc, link, img, createdAt: serverTimestamp() });
-            alert("تم النشر!"); 
+            alert("تم النشر بنجاح!"); 
+            document.getElementById('saveBtn').innerText = "نشر الآن ✨";
         };
 
         // تبديل التابات
@@ -155,54 +165,85 @@
             if(type === 'social') {
                 document.getElementById('content-area').classList.add('hidden');
                 document.getElementById('social-area').classList.remove('hidden');
+                document.getElementById('mainSearch').classList.add('hidden');
             } else {
                 document.getElementById('content-area').classList.remove('hidden');
                 document.getElementById('social-area').classList.add('hidden');
+                document.getElementById('mainSearch').classList.remove('hidden');
                 fetchItems(type);
-                updateAdminList(type); // تحديث قائمة الحذف
+                updateAdminList(type);
             }
         };
 
         function fetchItems(type) {
             onSnapshot(query(collection(db, type), orderBy("createdAt", "desc")), snap => {
-                const area = document.getElementById('content-area');
-                area.innerHTML = "";
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    area.innerHTML += `<button onclick="openDesc('${d.name}', '${d.img}', '${d.desc}', '${d.link}')" class="w-full p-4 bg-white/5 rounded-2xl flex items-center justify-between border border-white/5 hover:border-purple-500 transition mb-3"><div class="flex items-center gap-3"><img src="${d.img}" class="w-10 h-10 rounded-lg object-cover"><span class="text-xs font-bold">${d.name}</span></div><i class="fas fa-arrow-left text-[10px] opacity-20"></i></button>`;
-                });
+                currentItems = [];
+                snap.forEach(doc => currentItems.push({ id: doc.id, ...doc.data() }));
+                displayItems(currentItems);
             });
         }
 
-        // --- ميزة الحذف (جديد ✅) ---
+        function displayItems(items) {
+            const area = document.getElementById('content-area');
+            area.innerHTML = "";
+            items.forEach(d => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-4 bg-white/5 rounded-2xl flex items-center justify-between border border-white/5 hover:border-purple-500 transition mb-3";
+                btn.onclick = () => openDesc(d.name, d.img, d.desc, d.link);
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${d.img}" class="w-10 h-10 rounded-lg object-cover">
+                        <span class="text-xs font-bold">${d.name}</span>
+                    </div>
+                    <i class="fas fa-arrow-left text-[10px] opacity-20"></i>
+                `;
+                area.appendChild(btn);
+            });
+        }
+
+        // محرك البحث في الموقع
+        window.searchItems = () => {
+            const term = document.getElementById('mainSearch').value.toLowerCase();
+            const filtered = currentItems.filter(i => i.name.toLowerCase().includes(term));
+            displayItems(filtered);
+        };
+
+        // محرك البحث والحذف في الإدارة
         function updateAdminList(type) {
             onSnapshot(query(collection(db, type), orderBy("createdAt", "desc")), snap => {
-                const adminList = document.getElementById('admin-items-list');
-                adminList.innerHTML = "";
-                snap.forEach(docSnap => {
-                    const d = docSnap.data();
-                    adminList.innerHTML += `
-                        <div class="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-white/5">
-                            <span class="text-[10px] truncate w-24">${d.name}</span>
-                            <button onclick="deleteItem('${type}', '${docSnap.id}')" class="text-red-500 hover:text-red-400 p-2">
-                                <i class="fas fa-trash-alt text-xs"></i>
-                            </button>
-                        </div>`;
-                });
+                adminItems = [];
+                snap.forEach(docSnap => adminItems.push({ id: docSnap.id, type: type, ...docSnap.data() }));
+                filterAdminItems();
             });
         }
 
+        window.filterAdminItems = () => {
+            const term = document.getElementById('adminSearch').value.toLowerCase();
+            const adminList = document.getElementById('admin-items-list');
+            adminList.innerHTML = "";
+            adminItems.filter(i => i.name.toLowerCase().includes(term)).forEach(item => {
+                adminList.innerHTML += `
+                    <div class="flex items-center justify-between bg-white/5 p-2 rounded-lg border border-white/5">
+                        <span class="text-[10px] truncate w-24 font-bold">${item.name}</span>
+                        <button onclick="deleteItem('${item.type}', '${item.id}')" class="text-red-500 hover:text-red-400 p-2">
+                            <i class="fas fa-trash-alt text-xs"></i>
+                        </button>
+                    </div>`;
+            });
+        };
+
         window.deleteItem = async (type, id) => {
-            if(confirm("هل أنت متأكد من حذف هذا العنصر؟")) {
+            if(confirm("حذف هذا الملف؟")) {
                 await deleteDoc(doc(db, type, id));
-                alert("تم الحذف بنجاح!");
+                alert("تم الحذف!");
             }
         };
 
+        // إصلاح نافذة الوصف والتعليق
         window.openDesc = (name, img, desc, link) => {
             document.getElementById('modalName').innerText = name;
             document.getElementById('modalImg').src = img;
-            document.getElementById('modalDesc').innerText = desc || "لا يوجد وصف.";
+            document.getElementById('modalDesc').innerText = desc || "لا يوجد وصف متوفر.";
             document.getElementById('downloadBtn').href = link;
             document.getElementById('lockSection').classList.remove('hidden');
             document.getElementById('downloadBtn').classList.add('hidden');
@@ -214,15 +255,12 @@
             setTimeout(() => {
                 document.getElementById('lockSection').classList.add('hidden');
                 document.getElementById('downloadBtn').classList.remove('hidden');
-            }, 3000);
+            }, 2500);
         };
 
         window.closeDesc = () => document.getElementById('descModal').classList.remove('active');
         window.adminLogin = () => { if(prompt("Pass:") === "🇾🇪*야미, 네 삼촌|  |يامي عمكم*") toggleAdmin(); };
-        window.toggleAdmin = () => {
-            document.getElementById('adminSidebar').classList.toggle('open');
-            updateAdminList('trending'); // افتراض البداية
-        };
+        window.toggleAdmin = () => document.getElementById('adminSidebar').classList.toggle('open');
 
         changeTab('trending');
     </script>
